@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useGetAllBlogsQuery } from '@/redux/services/blogsApi'
 import { setBlogs, setSearchQuery, selectFilteredBlogs, selectSearchQuery } from '@/redux/features/blogs/blogsSlice'
 import { format } from 'date-fns'
+import { BLOG_CATEGORIES } from '@/lib/constants'
 
 export default function BlogsPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchInput, setSearchInput] = useState('')
-  
+  const [selectedCategory, setSelectedCategory] = useState('All')
+
   const dispatch = useDispatch()
   const { data, isLoading, error } = useGetAllBlogsQuery()
   const filteredBlogs = useSelector(selectFilteredBlogs)
@@ -35,8 +37,8 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen bg-white">
-     
-      
+
+
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 to-white py-16">
@@ -89,70 +91,88 @@ export default function BlogsPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBlogs.map((blog) => (
-              <article key={blog._id} className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all overflow-hidden border border-gray-100">
-                {/* Image */}
-                {blog.image && (
-                  <div className="relative h-48 bg-gray-200">
-                    <img
-                      src={blog.image}
-                      alt={blog.title}
-                      className="w-full h-full object-cover"
-                    />
-                    {blog.category && (
-                      <span className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {blog.category}
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {/* Content */}
-                <div className="p-6">
-                  <div className="flex items-center text-sm text-gray-500 mb-3 space-x-4">
-                    <span className="flex items-center">
-                      <Calendar size={16} className="mr-1" />
-                      {format(new Date(blog.createdAt), 'MMM dd, yyyy')}
-                    </span>
-                    <span className="flex items-center">
-                      <User size={16} className="mr-1" />
-                      {blog.author?.name || 'Admin'}
-                    </span>
-                  </div>
-
-                  <Link href={`/blogs/${blog.slug}`}>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors line-clamp-2">
-                      {blog.title}
-                    </h3>
-                  </Link>
-
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {stripHtml(blog.content)}
-                  </p>
-
-                  <Link 
-                    href={`/blogs/${blog.slug}`}
-                    className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors"
-                  >
-                    Read More
-                    <ArrowRight size={16} className="ml-1" />
-                  </Link>
-                </div>
-              </article>
+          {/* Categories Filter */}
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            <button
+              onClick={() => setSelectedCategory('All')}
+              className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${selectedCategory === 'All'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+            >
+              All
+            </button>
+            {BLOG_CATEGORIES.filter(cat => cat !== 'Other').map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${selectedCategory === cat
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+              >
+                {cat}
+              </button>
             ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredBlogs
+              .filter(blog => selectedCategory === 'All' || blog.category === selectedCategory)
+              .map((blog) => (
+                <article key={blog._id} className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all overflow-hidden border border-gray-100">
+                  {/* Image */}
+                  {blog.image && (
+                    <div className="relative h-48 bg-gray-200">
+                      <img
+                        src={blog.image}
+                        alt={blog.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {blog.category && (
+                        <span className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          {blog.category}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <div className="flex items-center text-sm text-gray-500 mb-3 space-x-4">
+                      <span className="flex items-center">
+                        <Calendar size={16} className="mr-1" />
+                        {format(new Date(blog.createdAt), 'MMM dd, yyyy')}
+                      </span>
+                      <span className="flex items-center">
+                        <User size={16} className="mr-1" />
+                        {blog.author?.name || 'Admin'}
+                      </span>
+                    </div>
+
+                    <Link href={`/blogs/${blog.slug}`}>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 hover:text-blue-600 transition-colors line-clamp-2">
+                        {blog.title}
+                      </h3>
+                    </Link>
+
+                    <p className="text-gray-600 mb-4 line-clamp-3">
+                      {stripHtml(blog.content)}
+                    </p>
+
+                    <Link
+                      href={`/blogs/${blog.slug}`}
+                      className="inline-flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+                    >
+                      Read More
+                      <ArrowRight size={16} className="ml-1" />
+                    </Link>
+                  </div>
+                </article>
+              ))}
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p>&copy; 2025 ModernBlog. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

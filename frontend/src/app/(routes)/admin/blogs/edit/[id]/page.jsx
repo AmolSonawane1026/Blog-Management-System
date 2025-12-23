@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useGetAllBlogsQuery, useUpdateBlogMutation } from '@/redux/services/blogsApi'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '@/redux/features/auth/authSlice'
+import { BLOG_CATEGORIES } from '@/lib/constants'
 import TiptapEditor from '@/components/TiptapEditor'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Save, Image as ImageIcon, Upload, Loader2, X } from 'lucide-react'
@@ -223,7 +224,7 @@ export default function EditBlogPage({ params }) {
             {/* Publish */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="font-semibold text-gray-900 mb-4">Update</h3>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Status
@@ -286,7 +287,7 @@ export default function EditBlogPage({ params }) {
                       </>
                     )}
                   </button>
-                  
+
                   <div className="mt-3">
                     <p className="text-xs text-gray-500 mb-2">Or enter image URL:</p>
                     <input
@@ -316,7 +317,7 @@ export default function EditBlogPage({ params }) {
                   >
                     <X size={16} />
                   </button>
-                  
+
                   <button
                     type="button"
                     onClick={() => featuredImageInputRef.current?.click()}
@@ -341,15 +342,19 @@ export default function EditBlogPage({ params }) {
             {/* Category */}
             <div className="bg-white rounded-xl shadow-md p-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category
+                Category *
               </label>
-              <input
-                type="text"
+              <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="e.g., Technology, Lifestyle"
-              />
+                required
+              >
+                <option value="" disabled>Select a category</option>
+                {BLOG_CATEGORIES.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
 
             {/* Tags */}

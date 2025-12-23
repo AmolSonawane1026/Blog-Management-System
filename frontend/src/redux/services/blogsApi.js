@@ -21,6 +21,13 @@ export const blogsApi = createApi({
       }),
       providesTags: ['Blog'],
     }),
+    getMyBlogs: builder.query({
+      query: (params) => ({
+        url: '/blogs/me/all',
+        params,
+      }),
+      providesTags: ['Blog'],
+    }),
     getBlogBySlug: builder.query({
       query: (slug) => `/blogs/${slug}`,
       providesTags: (result, error, slug) => [{ type: 'Blog', id: slug }],
@@ -65,6 +72,7 @@ export const blogsApi = createApi({
 
 export const {
   useGetAllBlogsQuery,
+  useGetMyBlogsQuery,
   useGetBlogBySlugQuery,
   useCreateBlogMutation,
   useUpdateBlogMutation,

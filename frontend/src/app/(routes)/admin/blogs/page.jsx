@@ -1,15 +1,30 @@
 'use client'
 
-import { useGetAllBlogsQuery, useDeleteBlogMutation } from '@/redux/services/blogsApi'
+import { useState, useEffect } from 'react'
+import { useGetMyBlogsQuery, useDeleteBlogMutation } from '@/redux/services/blogsApi'
+import { useGetCurrentUserQuery } from '@/redux/services/authApi'
 import { Edit, Trash2, Eye, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '@/redux/features/auth/authSlice'
 
 export default function ManageBlogsPage() {
-  const { data, isLoading, refetch } = useGetAllBlogsQuery()
+  const [mounted, setMounted] = useState(false)
+  const user = useSelector(selectCurrentUser)
+  const { data: userData } = useGetCurrentUserQuery(undefined, { skip: !mounted })
+  const currentUser = userData?.user || user
+  const { data, isLoading, refetch } = useGetMyBlogsQuery(
+    { email: currentUser?.email },
+    { skip: !mounted || !currentUser?.email }
+  )
   const [deleteBlog, { isLoading: isDeleting }] = useDeleteBlogMutation()
   const blogs = data?.blogs || []
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleDelete = async (id, title) => {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
@@ -22,6 +37,8 @@ export default function ManageBlogsPage() {
       }
     }
   }
+
+  if (!mounted) return null
 
   return (
     <div>
@@ -101,11 +118,10 @@ export default function ManageBlogsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        blog.status === 'published'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${blog.status === 'published'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                        }`}>
                         {blog.status || 'published'}
                       </span>
                     </td>

@@ -1,15 +1,31 @@
 'use client'
 
-import { useGetAllBlogsQuery } from '@/redux/services/blogsApi'
+import { useState, useEffect } from 'react'
+import { useGetMyBlogsQuery } from '@/redux/services/blogsApi'
+import { useGetCurrentUserQuery } from '@/redux/services/authApi'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '@/redux/features/auth/authSlice'
 import { FileText, Eye, TrendingUp, Users } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DashboardPage() {
-  const { data, isLoading } = useGetAllBlogsQuery()
+  const [mounted, setMounted] = useState(false)
   const user = useSelector(selectCurrentUser)
+  const { data: userData } = useGetCurrentUserQuery(undefined, { skip: !mounted })
+  const currentUser = userData?.user || user
+
+  const { data, isLoading } = useGetMyBlogsQuery(
+    { email: currentUser?.email },
+    { skip: !mounted || !currentUser?.email }
+  )
+
   const blogs = data?.blogs || []
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
 
   const stats = [
     {
@@ -49,7 +65,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.name || 'Admin'}!
+          Welcome back, {currentUser?.name || 'Admin'}!
         </h1>
         <p className="text-gray-600">Here's what's happening with your blog today.</p>
       </div>
@@ -94,7 +110,7 @@ export default function DashboardPage() {
       {/* Recent Blogs */}
       <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Blogs</h2>
-        
+
         {isLoading ? (
           <div className="text-center py-8">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
@@ -118,14 +134,13 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    blog.status === 'published' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${blog.status === 'published'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                    }`}>
                     {blog.status || 'published'}
                   </span>
-                  <Link 
+                  <Link
                     href={`/admin/blogs/edit/${blog._id}`}
                     className="text-blue-600 hover:text-blue-700 font-medium text-sm"
                   >

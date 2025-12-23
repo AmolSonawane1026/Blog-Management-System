@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectIsAuthenticated, selectCurrentUser, logout } from '@/redux/features/auth/authSlice'
 import Link from 'next/link'
-import { LayoutDashboard, FileText, PlusCircle, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, FileText, PlusCircle, LogOut, Menu, X, Users, User } from 'lucide-react'
 import { useState } from 'react'
 
 export default function AdminLayout({ children }) {
@@ -34,6 +34,8 @@ export default function AdminLayout({ children }) {
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/admin/blogs', icon: FileText, label: 'All Blogs' },
     { href: '/admin/blogs/create', icon: PlusCircle, label: 'Create Blog' },
+    ...(user?.role === 'admin' ? [{ href: '/admin/users', icon: Users, label: 'Users' }] : []),
+    { href: '/admin/profile', icon: User, label: 'Profile' },
   ]
 
   return (
@@ -55,7 +57,7 @@ export default function AdminLayout({ children }) {
       `}>
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-8">Admin Panel</h2>
-          
+
           {/* User Info */}
           <div className="mb-8 pb-6 border-b border-gray-700">
             <div className="flex items-center space-x-3">

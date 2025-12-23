@@ -52,3 +52,26 @@ export const authorize = (...roles) => {
     next()
   }
 }
+
+// Optional protection - populates req.user if token exists, but doesn't required it
+export const optionalProtect = async (req, res, next) => {
+  let token
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  }
+
+  if (!token) {
+    return next()
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    req.user = await User.findById(decoded.id).select('-password')
+    next()
+  } catch (error) {
+    // If token invalid, we just proceed without req.user
+    next()
+  }
+}
+

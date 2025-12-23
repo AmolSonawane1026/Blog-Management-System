@@ -4,6 +4,7 @@ import authReducer from './features/auth/authSlice'
 import blogsReducer from './features/blogs/blogsSlice'
 import { blogsApi } from './services/blogsApi'
 import { authApi } from './services/authApi'
+import { usersApi } from './services/usersApi'
 
 export const store = configureStore({
   reducer: {
@@ -11,9 +12,10 @@ export const store = configureStore({
     blogs: blogsReducer,
     [blogsApi.reducerPath]: blogsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(blogsApi.middleware, authApi.middleware),
+    getDefaultMiddleware().concat(blogsApi.middleware, authApi.middleware, usersApi.middleware),
 })
 
 setupListeners(store.dispatch)

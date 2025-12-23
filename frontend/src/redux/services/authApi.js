@@ -32,7 +32,20 @@ export const authApi = createApi({
       query: () => '/auth/me',
       providesTags: ['Auth'],
     }),
+    updateProfile: builder.mutation({
+      query: (userData) => ({
+        url: '/auth/profile',
+        method: 'PUT',
+        body: userData,
+      }),
+      invalidatesTags: ['Auth'],
+    }),
   }),
 })
 
-export const { useLoginMutation, useRegisterMutation, useGetCurrentUserQuery } = authApi
+export const { 
+  useLoginMutation, 
+  useRegisterMutation, 
+  useGetCurrentUserQuery,
+  useUpdateProfileMutation
+} = authApi

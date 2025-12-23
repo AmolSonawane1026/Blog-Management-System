@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useCreateBlogMutation, useGetCloudinaryImagesQuery, useDeleteCloudinaryImageMutation } from '@/redux/services/blogsApi'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken } from '@/redux/features/auth/authSlice'
+import { BLOG_CATEGORIES } from '@/lib/constants'
 import TiptapEditor from '@/components/TiptapEditor'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Save, Image as ImageIcon, Upload, Loader2, X, Trash2 } from 'lucide-react'
@@ -22,7 +23,6 @@ export default function CreateBlogPage() {
   const [showImageGallery, setShowImageGallery] = useState(false)
 
   // Category management
-  const predefinedCategories = ['Technology', 'Lifestyle', 'Travel', 'Health', 'Business', 'Education', 'Food', 'Other']
   const [selectedCategory, setSelectedCategory] = useState('')
   const [customCategory, setCustomCategory] = useState('')
 
@@ -453,7 +453,7 @@ export default function CreateBlogPage() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all mb-3"
               >
                 <option value="" disabled>Select a category</option>
-                {predefinedCategories.map(cat => (
+                {BLOG_CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>

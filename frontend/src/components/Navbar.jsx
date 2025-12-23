@@ -2,23 +2,20 @@
 
 import Link from 'next/link'
 import { BookOpen, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { selectIsAuthenticated } from '@/redux/features/auth/authSlice'
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false)
+    const [mounted, setMounted] = useState(false)
     const pathname = usePathname()
+    const isAuthenticated = useSelector(selectIsAuthenticated)
 
-    // Don't show navbar on login page or admin routes if desired (User didn't specify, but usually "global" means everywhere. 
-    // However, Admin dashboard usually has its own layout. 
-    // User said "make the navbar and footer global", so I will put it in root layout.
-    // If needed, I can conditionally render it. 
-    // Let's assume it should appear everywhere for now, as is typical for a "global" request unless specified otherwise.
-    // But wait, the admin dashboard usually has a sidebar.
-    // Let's check if there is an admin layout.
-    // I'll stick to the user request: "make the navbar and footer global". 
-    // If it conflicts with admin layout, we might need a check. 
-    // But for now, simple extraction.)
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     return (
         <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -34,6 +31,13 @@ export default function Navbar() {
                         <Link href="/blogs" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Blogs</Link>
                         <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">About</Link>
                         <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</Link>
+                        {mounted && (
+                            isAuthenticated ? (
+                                <Link href="/admin/dashboard" className="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-md">Dashboard</Link>
+                            ) : (
+                                <Link href="/login" className="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-md">Login</Link>
+                            )
+                        )}
                     </div>
 
                     <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 hover:bg-gray-100 rounded-lg">
@@ -47,6 +51,13 @@ export default function Navbar() {
                         <Link href="/blogs" className="block text-gray-700 hover:text-blue-600 font-medium py-2">Blogs</Link>
                         <Link href="/about" className="block text-gray-700 hover:text-blue-600 font-medium py-2">About</Link>
                         <Link href="/contact" className="block text-gray-700 hover:text-blue-600 font-medium py-2">Contact</Link>
+                        {mounted && (
+                            isAuthenticated ? (
+                                <Link href="/admin/dashboard" className="block w-full text-center bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold mt-4">Dashboard</Link>
+                            ) : (
+                                <Link href="/login" className="block w-full text-center bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold mt-4">Login</Link>
+                            )
+                        )}
                     </div>
                 )}
             </div>

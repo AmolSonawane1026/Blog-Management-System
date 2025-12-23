@@ -9,9 +9,10 @@ import {
   uploadBlogImage,
   getCloudinaryImages,
   deleteCloudinaryImage,
-  getBlogStats
+  getBlogStats,
+  getMyBlogs
 } from '../controllers/blogController.js'
-import { protect, authorize } from '../middleware/auth.js'
+import { protect, authorize, optionalProtect } from '../middleware/auth.js'
 
 const router = express.Router()
 
@@ -30,20 +31,21 @@ const upload = multer({
 })
 
 // Public routes
-router.get('/', getAllBlogs)
+router.get('/', optionalProtect, getAllBlogs)
 
 // Protected routes - Specific endpoints must come before parameterized routes
 router.get('/images', protect, getCloudinaryImages)
 router.delete('/images/:public_id', protect, deleteCloudinaryImage)
 router.get('/admin/stats', protect, getBlogStats)
+router.get('/me/all', protect, getMyBlogs)
 
 // Public routes - Parameterized
 router.get('/:slug', getBlogBySlug)
 
 // Protected routes - Operations
-router.post('/', protect, authorize('admin', 'editor'), createBlog)
-router.put('/:id', protect, authorize('admin', 'editor'), updateBlog)
-router.delete('/:id', protect, authorize('admin', 'editor'), deleteBlog)
+router.post('/', protect, authorize('admin', 'editor', 'user'), createBlog)
+router.put('/:id', protect, authorize('admin', 'editor', 'user'), updateBlog)
+router.delete('/:id', protect, authorize('admin', 'editor', 'user'), deleteBlog)
 router.post('/upload-image', protect, upload.single('image'), uploadBlogImage)
 
 export default router

@@ -1,23 +1,31 @@
 import Blog from '../models/Blog.js'
-import cloudinary from '../config/cloudinary.js' // ✅ Add this import
+import cloudinary from '../config/cloudinary.js'
+import mongoose from 'mongoose'
 
 // @desc    Get all blogs
 // @route   GET /api/blogs
 // @access  Public
 export const getAllBlogs = async (req, res) => {
   try {
-    const { page = 1, limit = 10, category, status, search } = req.query
+    const { page = 1, limit = 10, category, status, search, personal } = req.query
 
     let query = {}
 
-    if (category) {
-      query.category = category
-    }
-
-    if (status && req.user) {
-      query.status = status
+    // Personal blogs for dashboard
+    if (personal === 'true' && req.user) {
+      query.author = req.user.id
+      
+      // If searching for personal blogs, we can show all statuses unless one is specified
+      if (status) {
+        query.status = status
+      }
     } else {
+      // Public view - only published blogs
       query.status = 'published'
+      
+      if (category) {
+        query.category = category
+      }
     }
 
     if (search) {
@@ -51,6 +59,63 @@ export const getAllBlogs = async (req, res) => {
     })
   }
 }
+
+// @desc    Get current user's blogs
+// @route   GET /api/blogs/me/all
+// @access  Private
+export const getMyBlogs = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, search, email } = req.query
+    
+    let query = {}
+    
+    // If email is provided, use it to find the user (as per user request)
+    // Otherwise use req.user.id from the token
+    if (email) {
+      const user = await mongoose.model('User').findOne({ email })
+      if (!user) {
+        return res.status(200).json({ success: true, count: 0, blogs: [] })
+      }
+      query.author = user._id
+    } else if (req.user) {
+      query.author = req.user.id
+    } else {
+      return res.status(401).json({ success: false, message: 'Not authorized' })
+    }
+
+    if (status) {
+      query.status = status
+    }
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } }
+      ]
+    }
+
+    const blogs = await Blog.find(query)
+      .populate('author', 'name email avatar')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+
+    const count = await Blog.countDocuments(query)
+
+    res.status(200).json({
+      success: true,
+      count: blogs.length,
+      total: count,
+      blogs
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
 
 // @desc    Get single blog by slug
 // @route   GET /api/blogs/:slug
@@ -326,7 +391,7 @@ export const getBlogStats = async (req, res) => {
     })
 
     const totalViews = await Blog.aggregate([
-      { $match: { author: req.user._id } },
+      { $match: { author: new mongoose.Types.ObjectId(req.user.id) } },
       { $group: { _id: null, total: { $sum: '$views' } } }
     ])
 

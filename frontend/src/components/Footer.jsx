@@ -18,12 +18,13 @@ export default function Footer() {
                             <li><Link href="/blogs" className="hover:text-blue-400 transition-colors">Blogs</Link></li>
                             <li><Link href="/about" className="hover:text-blue-400 transition-colors">About</Link></li>
                             <li><Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link></li>
+                            <li><Link href="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">Want to post blogs?</Link></li>
                         </ul>
                     </div>
                     <div>
                         <h4 className="text-white font-semibold mb-4">Contact</h4>
-                        <p className="text-gray-400">Email: info@modernblog.com</p>
-                        <p className="text-gray-400">Phone: +91 1234567890</p>
+                        <p className="text-gray-400">Email: pro.amolsonawane@gmail.com</p>
+                        <p className="text-gray-400">Phone: +91 7558379918</p>
                     </div>
                 </div>
                 <div className="border-t border-gray-800 pt-8 text-center text-sm">
