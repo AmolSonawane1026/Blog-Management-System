@@ -8,7 +8,7 @@ export default function AboutPage() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white mt-16">
      
 
       {/* Hero */}

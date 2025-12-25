@@ -11,63 +11,141 @@
   --color-primary-700: #0369a1;
   --color-primary-800: #075985;
   --color-primary-900: #0c4a6e;
+  
+  --color-brand-indigo: #6366f1;
+  --color-brand-purple: #8b5cf6;
+  --color-brand-pink: #ec4899;
+}
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-blur: 12px;
+  
+  --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.15);
 }
 
 * {
-  @apply border-gray-200;
+  @apply border-gray-200 transition-colors duration-200;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
-  @apply bg-white text-gray-900 antialiased;
+  @apply bg-[#f8fafc] text-slate-900 antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+/* Premium Utilities */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.premium-card {
+  @apply bg-white rounded-2xl border border-slate-100 transition-all duration-300;
+  box-shadow: var(--card-shadow);
+}
+
+.premium-card:hover {
+  @apply -translate-y-1;
+  box-shadow: var(--card-hover-shadow);
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 font-bold;
+}
+
+.gradient-bg {
+  @apply bg-gradient-to-br from-indigo-600 to-purple-700;
 }
 
 /* TipTap Editor Styles */
 .ProseMirror {
-  min-height: 300px;
-  padding: 1rem;
+  min-height: 400px;
+  padding: 2rem;
   outline: none;
+  @apply text-lg leading-relaxed text-slate-700;
 }
 
 .ProseMirror p {
-  margin: 1rem 0;
+  margin: 1.25rem 0;
+}
+
+.ProseMirror h1 {
+  @apply text-4xl font-extrabold text-slate-900 mb-6;
 }
 
 .ProseMirror h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 1.5rem 0 1rem;
+  @apply text-2xl font-bold text-slate-900 mt-8 mb-4;
+}
+
+.ProseMirror h3 {
+  @apply text-xl font-semibold text-slate-800 mt-6 mb-3;
 }
 
 .ProseMirror ul,
 .ProseMirror ol {
   padding-left: 2rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  @apply list-outside;
 }
 
+.ProseMirror ul { @apply list-disc; }
+.ProseMirror ol { @apply list-decimal; }
+
 .ProseMirror blockquote {
-  border-left: 4px solid #e5e7eb;
-  padding-left: 1rem;
-  margin: 1rem 0;
-  color: #6b7280;
+  @apply border-l-4 border-indigo-500 bg-indigo-50/50 py-2 pl-6 pr-4 my-8 italic text-indigo-900 rounded-r-lg;
 }
 
 .ProseMirror code {
-  background-color: #f3f4f6;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-family: monospace;
+  @apply bg-slate-100 text-indigo-600 px-1.5 py-0.5 rounded font-mono text-sm;
 }
 
 .ProseMirror pre {
-  background-color: #1f2937;
-  color: #f9fafb;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
+  @apply bg-slate-900 text-slate-100 p-6 rounded-xl my-8 overflow-x-auto font-mono text-sm shadow-lg;
 }
 
 .ProseMirror img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 0.5rem;
+  @apply max-w-full h-auto rounded-2xl my-8 shadow-xl;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full border-2 border-transparent bg-clip-padding hover:bg-slate-400;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }

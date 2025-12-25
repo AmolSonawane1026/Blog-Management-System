@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { BookOpen, Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from 'react-redux'
@@ -41,7 +41,7 @@ export default function SignupPage() {
                 user: result.user
             }))
 
-            toast.success('Registration successful!')
+            toast.success('Welcome to the community!')
             router.push('/admin/dashboard')
         } catch (error) {
             toast.error(error?.data?.message || 'Registration failed. Please try again.')
@@ -49,95 +49,97 @@ export default function SignupPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4 py-12">
-            <div className="max-w-md w-full">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <Link href="/" className="inline-flex items-center space-x-2 mb-4">
-                        <BookOpen className="h-12 w-12 text-blue-600" />
-                        <span className="text-3xl font-bold text-blue-600">ModernBlog</span>
-                    </Link>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-                    <p className="text-gray-600">Join our community and start blogging</p>
+        <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center px-4 pt-40 pb-20 relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[40%] bg-indigo-200/20 blur-[100px] rounded-full" />
+                <div className="absolute bottom-[-5%] left-[-5%] w-[40%] h-[40%] bg-purple-200/20 blur-[100px] rounded-full" />
+            </div>
+
+            <div className="max-w-md w-full relative z-10">
+                {/* Header */}
+                <div className="text-center mb-10">
+                    <h1 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">Join Us Today</h1>
+                    <p className="text-slate-500 font-medium text-lg">Create your account and start sharing stories</p>
                 </div>
 
-                {/* Signup Form */}
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                {/* Signup Card */}
+                <div className="bg-white rounded-[2.5rem] shadow-2xl p-10 border border-slate-100">
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Name */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 uppercase tracking-widest ml-1">
                                 Full Name
                             </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={20} />
                                 <input
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="John Doe"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none transition-all font-medium text-slate-900"
+                                    placeholder="Your Name"
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Email */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 uppercase tracking-widest ml-1">
                                 Email Address
                             </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={20} />
                                 <input
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="john@example.com"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none transition-all font-medium text-slate-900"
+                                    placeholder="name@example.com"
                                     required
                                 />
                             </div>
                         </div>
 
                         {/* Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 uppercase tracking-widest ml-1">
                                 Password
                             </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={20} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full pl-10 pr-12 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="Create a password"
+                                    className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none transition-all font-medium text-slate-900"
+                                    placeholder="••••••••"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-900 transition-colors"
                                 >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
                         </div>
 
                         {/* Confirm Password */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 uppercase tracking-widest ml-1">
                                 Confirm Password
                             </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <div className="relative group">
+                                <CheckCircle2 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={20} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="Confirm your password"
+                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:border-transparent outline-none transition-all font-medium text-slate-900"
+                                    placeholder="••••••••"
                                     required
                                 />
                             </div>
@@ -147,27 +149,33 @@ export default function SignupPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 px-6 rounded-2xl transition-all shadow-xl hover:shadow-slate-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed mt-4 flex items-center justify-center gap-2"
                         >
-                            {isLoading ? 'Creating Account...' : 'Sign Up'}
+                            {isLoading ? (
+                                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                                <>
+                                    <span>Create Account</span>
+                                    <ArrowRight size={20} />
+                                </>
+                            )}
                         </button>
                     </form>
 
-                    {/* Login Link */}
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                    {/* Footer Links */}
+                    <div className="mt-10 space-y-4 text-center">
+                        <p className="text-sm font-bold text-slate-500">
                             Already have an account?{' '}
-                            <Link href="/login" className="text-blue-600 font-semibold hover:underline">
+                            <Link href="/login" className="text-indigo-600 border-b-2 border-indigo-100 hover:border-indigo-600 transition-all ml-1">
                                 Sign In
                             </Link>
                         </p>
-                    </div>
-
-                    {/* Back to Home */}
-                    <div className="mt-4 text-center">
-                        <Link href="/" className="text-sm text-gray-600 hover:text-blue-600">
-                            ← Back to Home
-                        </Link>
+                        <div className="pt-4 border-t border-slate-50">
+                            <Link href="/" className="text-sm font-bold text-slate-400 hover:text-slate-900 flex items-center justify-center gap-2 group transition-colors">
+                                <span className="group-hover:-translate-x-1 transition-transform">←</span>
+                                Back to Home
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -34,7 +34,7 @@ export default function BlogDetailPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white mt-16">
      
 
       {/* Content */}
