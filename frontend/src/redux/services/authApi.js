@@ -16,25 +16,25 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/auth/login',
+        url: '/api/auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
     register: builder.mutation({
       query: (userData) => ({
-        url: '/auth/register',
+        url: '/api/auth/register',
         method: 'POST',
         body: userData,
       }),
     }),
     getCurrentUser: builder.query({
-      query: () => '/auth/me',
+      query: () => '/api/auth/me',
       providesTags: ['Auth'],
     }),
     updateProfile: builder.mutation({
       query: (userData) => ({
-        url: '/auth/profile',
+        url: '/api/auth/profile',
         method: 'PUT',
         body: userData,
       }),

@@ -15,16 +15,16 @@ export const usersApi = createApi({
   tagTypes: ['User'],
   endpoints: (builder) => ({
     getUsers: builder.query({
-      query: () => '/users',
+      query: () => '/api/users',
       providesTags: ['User'],
     }),
     getUser: builder.query({
-      query: (id) => `/users/${id}`,
+      query: (id) => `/api/users/${id}`,
       providesTags: ['User'],
     }),
     updateUser: builder.mutation({
       query: ({ id, ...userData }) => ({
-        url: `/users/${id}`,
+        url: `/api/users/${id}`,
         method: 'PUT',
         body: userData,
       }),
@@ -32,7 +32,7 @@ export const usersApi = createApi({
     }),
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/users/${id}`,
+        url: `/api/users/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],

@@ -16,25 +16,25 @@ export const blogsApi = createApi({
   endpoints: (builder) => ({
     getAllBlogs: builder.query({
       query: (params) => ({
-        url: '/blogs',
+        url: '/api/blogs',
         params,
       }),
       providesTags: ['Blog'],
     }),
     getMyBlogs: builder.query({
       query: (params) => ({
-        url: '/blogs/me/all',
+        url: '/api/blogs/me/all',
         params,
       }),
       providesTags: ['Blog'],
     }),
     getBlogBySlug: builder.query({
-      query: (slug) => `/blogs/${slug}`,
+      query: (slug) => `/api/blogs/${slug}`,
       providesTags: (result, error, slug) => [{ type: 'Blog', id: slug }],
     }),
     createBlog: builder.mutation({
       query: (blogData) => ({
-        url: '/blogs',
+        url: '/api/blogs',
         method: 'POST',
         body: blogData,
       }),
@@ -42,7 +42,7 @@ export const blogsApi = createApi({
     }),
     updateBlog: builder.mutation({
       query: ({ id, ...blogData }) => ({
-        url: `/blogs/${id}`,
+        url: `/api/blogs/${id}`,
         method: 'PUT',
         body: blogData,
       }),
@@ -50,20 +50,20 @@ export const blogsApi = createApi({
     }),
     deleteBlog: builder.mutation({
       query: (id) => ({
-        url: `/blogs/${id}`,
+        url: `/api/blogs/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Blog'],
     }),
     getCloudinaryImages: builder.query({
       query: (next_cursor) => ({
-        url: '/blogs/images',
+        url: '/api/blogs/images',
         params: { next_cursor },
       }),
     }),
     deleteCloudinaryImage: builder.mutation({
       query: (public_id) => ({
-        url: `/blogs/images/${encodeURIComponent(public_id)}`,
+        url: `/api/blogs/images/${encodeURIComponent(public_id)}`,
         method: 'DELETE',
       }),
     }),

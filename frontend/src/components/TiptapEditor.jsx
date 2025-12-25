@@ -114,7 +114,7 @@ export default function TiptapEditor({ content, onChange }) {
     formData.append('image', file)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blogs/upload-image`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blogs/upload-image`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
